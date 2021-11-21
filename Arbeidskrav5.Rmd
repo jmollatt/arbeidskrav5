@@ -19,6 +19,54 @@ data("strengthvolume")
 ```
 
 ```{r}
+library(tidyverse)
+
+dat <- dxadata %>%
+  select(participant:include, sex, lean.left_leg, lean.right_leg) %>%
+  pivot_longer(names_to = "leg", 
+               values_to = "lean.mass", 
+               cols = lean.left_leg:lean.right_leg) %>%
+  mutate(leg = if_else(leg == "lean.left_leg", "L", "R"), 
+         sets = if_else(multiple == leg, "multiple", "single")) %>%
+  filter(include == "incl") %>%
+  select(participant, time, sex, include, sets, leg, lean.mass) %>%
+
+  pivot_wider(names_from = time, 
+              values_from = lean.mass) %>%
+  mutate(lbm.change = post - pre,
+         pre.mc = pre - mean(pre)) %>%
+  
+  print()
+
+library(lmerTest); library(lme4)
+
+m0 <- lm(lbm.change ~ pre + sex + sets, data = dat)
+m1 <- lmerTest::lmer(post ~ pre + sex + sets + + (1|participant), data = dat)
+m2 <- lme4::lmer(post ~ pre + sex + sets + + (1|participant), data = dat)
+
+
+lmer(lbm.change ~ pre + sex + sets + (1|participant), data = dat)
+
+summary(m0)
+summary(m1)
+summary(m2)
+
+plot(m2)
+
+
+confint(m2)
 
 ```
+```{r}
+
+strengthvolume %>%
+  group_by(exercise) %>%
+  mutate(scaled.load = load / max(load, na.rm = TRUE)) %>%
+  group_by(participant, time, sex, sets) %>%
+  summarise(combined.load = mean(scaled.load, na.rm = TRUE)) %>%
+  ungroup() %>%
+  print()
+
+```
+
 
