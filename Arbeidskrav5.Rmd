@@ -79,3 +79,6 @@ Deltakerne fulgte en treningsintervensjon over 12 uker. Etter oppstart ble styrk
 Styrkeøvelsene ble gjennomført unilateralt for at pasientene kunne gjennomføre ulike protokoller på ulike bein. I forkant av alle treningsøkter gjennomførte deltakerne en standardisert og progressiv oppvarmingsprotokoll. Deltakerne gjennomførte øvelser i følgende rekkefølge; unilateral beinpress, knefleksjon og kneekstensjon. Deltakerne gjorde ett sett på ett bein, og tre sett på det motsatte beinet. Enkeltsettet ble gjennomført mellom andre og tredje sett på motsatt bein. Underveis i intervensjonen ble intensiteten økt gradvis fra 10RM til 8RM og deretter til 7 RM. Hviletid. Øktprogresjon. Periodisering. Restitusjonsdrikk. 
 
 #### Målinger 
+Det ble gjennomført isokinetiske og isometriske styrketester av styrken i kneekstensjon i dynamometer (Cybex). Maks styrke ble mål som 1RM i unilateralt benpress og kneektesjon. Muskeltversnitt i kneekstensorgruppen ble målt før og etter treningsintervensjon gjennom MR. Kroppssammensetning ble målt ved hjelp av DXA. Muskelbiopsi ble hentet bilateralt fra vastus lateralis. 
+
+#### Statistiske analyser 
