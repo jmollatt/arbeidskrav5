@@ -1,0 +1,24 @@
+---
+title: "Arbeidskrav5"
+author: "Jacob Mollatt"
+date: "11/21/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(exscidata)
+data("dxadata")
+data("strengthvolume")
+
+?dxadata
+?strengthvolume
+```
+
+```{r}
+
+```
+
