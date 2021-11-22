@@ -104,7 +104,8 @@ plot(m3)
 ```
 
 ## Introduksjon
-Vi ønsker å undersøke hvorvidt det er en forskjell i treningsresponsen mellom grupper som gjør ett sett med styrketrening kontra flere sett med styrketrening for beinmuskulatur. 
+
+Vi ønsker å undersøke hvorvidt det er en forskjell i treningsresponsen mellom grupper som gjør ett sett med styrketrening kontra flere sett med styrketrening for beinmuskulatur.
 
 ## Metode
 
@@ -119,10 +120,12 @@ Deltakerne fulgte en treningsintervensjon over 12 uker. Etter oppstart ble styrk
 Styrkeøvelsene ble gjennomført unilateralt for at pasientene kunne gjennomføre ulike protokoller på ulike bein. I forkant av alle treningsøkter gjennomførte deltakerne en standardisert og progressiv oppvarmingsprotokoll. Deltakerne gjennomførte øvelser i følgende rekkefølge; unilateral beinpress, knefleksjon og kneekstensjon. Deltakerne gjorde ett sett på ett bein, og tre sett på det motsatte beinet. Enkeltsettet ble gjennomført mellom andre og tredje sett på motsatt bein. Underveis i intervensjonen ble intensiteten økt gradvis fra 10RM til 8RM og deretter til 7 RM. Hviletid. Øktprogresjon. Periodisering. Restitusjonsdrikk.
 
 #### Målinger
+
 Det ble gjennomført isokinetiske og isometriske styrketester av styrken i kneekstensjon i dynamometer (Cybex). Maks styrke ble mål som 1RM i unilateralt benpress og kneektesjon. Muskeltversnitt i kneekstensorgruppen ble målt før og etter treningsintervensjon gjennom MR. Kroppssammensetning ble målt ved hjelp av DXA. Muskelbiopsi ble hentet bilateralt fra vastus lateralis.
 
 #### Statistiske analyser
-For å sammenligne hvilken effekt styrketrening med kun ett enkeltsett kontra flere sett har på muskelstyrken i beina, og mengden muskelmasse(fettfri masse) har vi i denne studien sett på prosentvis endring fra baseline til etter intervensjon, i de to intervensjonsgruppene. Det har blitt regnet ut og presentert den gjennomsnittlige endringen fra baseline til etter intervensjon, med standarddavvik. De ulike intervensjonene er også sammenlignet med hjelp av en ANVOCA-modell, for å ta høyde for samvarierende variabler. Regresjonsligningen skal se på endringen etter at man tar høyde for forskjell i verdier ved pre-test og etter å ha tatt høyde for forskjell i kjønn. Det har også bitt foretatt en gjenomsnittssentrering av dataene. 
+
+For å sammenligne hvilken effekt styrketrening med kun ett enkeltsett kontra flere sett har på muskelstyrken i beina, og mengden muskelmasse(fettfri masse) har vi i denne studien sett på prosentvis endring fra baseline til etter intervensjon, i de to intervensjonsgruppene. Det har blitt regnet ut og presentert den gjennomsnittlige endringen fra baseline til etter intervensjon, med standarddavvik. De ulike intervensjonene er også sammenlignet med hjelp av en ANVOCA-modell, for å ta høyde for samvarierende variabler. Regresjonsligningen skal se på endringen etter at man tar høyde for forskjell i verdier ved pre-test og etter å ha tatt høyde for forskjell i kjønn. Det har også bitt foretatt en gjenomsnittssentrering av dataene.
 
 ```{r}
 # TABELL FOR ØKNING FETTFRI MASSE PRE TIL POST FORDELT PÅ INTERVENSJONSGRUPPER 
@@ -182,13 +185,11 @@ tabell_strengthchange
 #Målt i ren prosentvis gjennomsnittlig fremgang hadde gruppen med flersett 31% (SD 14.2) fremgang fra baseline til etter intervensjon, mens gruppen med enkeltsett hadde 24.5% (SD 12.9) fremgang fra baseline til intervensjonen var avsluttet. 
 ```
 
+## Resultater
 
-## Resultater 
+#### Muskelmasse
 
-#### Muskelmasse 
-Etter å ha justert for kjønn og baselineverdier viser deltakerne i gruppen med flere sett hadde i gjennomsnitt økt muskelmassen i beina med 123,5 gram mer(SD 55.17, 95% CI), enn deltakerne i gruppen som hadde intervensjon med kun ett sett. Gjennomsnittlig prosentvis endring i fra baselinetesting til fullført intervensjon er vist i Tabell 2`r tabell_lbmleg`. 
-
-
+Etter å ha justert for kjønn og baselineverdier viser deltakerne i gruppen med flere sett hadde i gjennomsnitt økt muskelmassen i beina med 123,5 gram mer(SD 55.17, 95% CI), enn deltakerne i gruppen som hadde intervensjon med kun ett sett. Gjennomsnittlig prosentvis endring i fra baselinetesting til fullført intervensjon er vist i Tabell 2`r tabell_lbmleg`.
 
 ```{r}
 plotdata <- dxadata %>%
@@ -206,12 +207,11 @@ plotdata %>%
  ggplot(aes(time, lean.legs, group = paste(participant, group), color = group)) + geom_line() + theme_minimal()
 ```
 
-#### Styrke 
+#### Styrke
+
 Etter å ha justert for verdier ved baseline og kjønn målte gruppen som har gjennomført enkeltsett hadde en signifikant lavere verdi etter avsluttet intervensjon enn gruppen med flersett i beinstyrke. Fremgangen er målt i skalert motstand, som er motstand som en andel av maks. I skalert motstand hadde gruppen med enkeltsett gjennomsnittlig 0.029(95% CI) lavere verdier etter endt intervensjon enn gruppen med flersett.
 
 Gjennomsnittlig prosentvis endring i muskelstyrke fra baselinetesting til fullført intervensjon er vist i Tabell 3`r tabell_strengthchange`.
 
-##Konklusjon
+## Konklusjon 
 Fra baseline til etter intervensjonen var avsluttet var det en signifikant forskjell i fremgangen i gruppen med flersett sammenlignet med gruppen med enkeltsett, i både mengde muskelmasse i beina, samt muskelstyrke i bein.
-
-
