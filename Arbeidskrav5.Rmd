@@ -40,21 +40,18 @@ dat <- dxadata %>%
   
   print()
 
- lbmleg <- dat %>%    
+lbmleg <- dat %>%    
   filter(!is.na(post)) %>%
   group_by(sets) %>%
   summarise(m = mean(pros.change),
             sd = sd(pros.change)) %>%
-  
-   print()
- 
- lbmleg$m
- lbmleg$sd
+  mutate(meansd= paste0(signif(m, 3), "(", signif(sd, 3), ")")) %>%
+  select(sets, meansd) %>%
+  print()
 
  
-
-
- 
+ lbmleg$sets
+ lbmleg$meansd
 
 library(lmerTest); library(lme4)
 
@@ -66,7 +63,7 @@ confint(m0)
 
 ##Etter å ha justert for kjønn og baselineverdier viser deltakerne i gruppen med flere sett hadde i gjennomsnitt økt muskelmassen i beina med 123,5 gram mer(SD 55.17, 95% CI), enn deltakerne i gruppen som hadde intervensjon med kun ett sett.
 
-#Deltakerne i gruppen med flere sett var det i gjennomsnitt en 3,36%(SD 4,5) økning i muskelmasse i beina fra baseline til etter intervensjon. I gruppen med enkeltsett var det i gjennomsnitt en økning på 2.05%(SD 3,6) fra baseline til etter intervensjonen var avsluttet. 
+#Deltakerne i gruppen med flere sett var det i gjennomsnitt en 3,37%(SD 4,59) økning i muskelmasse i beina fra baseline til etter intervensjon. I gruppen med enkeltsett var det i gjennomsnitt en økning på 2.05%(SD 3,62) fra baseline til etter intervensjonen var avsluttet. 
 
 ```
 
@@ -94,11 +91,6 @@ summary(m3)
 confint(m3)
 plot(m3)
 
-#Etter å ha justert for verdier ved baseline og kjønn viser viste gruppen som har gjennomført enkeltsett hadde en gjennomsnittlig signifikant lavere fremgang enn gruppen med flersett i beinstyrke. Fremgangen er målt i skalert motstand, som er motstand som en andel av maks. I skalert motstand hadde gruppen med enkeltsett gjennomsnittlig 0.029 kg(95% CI) lavere fremgang enn gruppen med flersett.
-
-#Målt i ren prosentvis gjennomsnittlig fremgang hadde gruppen med flersett 31% (SD 14.2) fremgang fra baseline til etter intervensjon, mens gruppen med enkeltsett hadde 24.5% (SD 12.9) fremgang fra baseline til intervensjonen var avsluttet. 
-
-
 ```
 
 ## Introduksjon
@@ -125,9 +117,55 @@ For å sammenligne hvilken effekt styrketrening med kun ett enkeltsett kontra fl
 ## Resultater 
 
 #### Muskelmasse 
-Etter å ha justert for kjønn og baselineverdier viser deltakerne i gruppen med flere sett hadde i gjennomsnitt økt muskelmassen i beina med 123,5 gram mer(SD 55.17, 95% CI), enn deltakerne i gruppen som hadde intervensjon med kun ett sett.
+Etter å ha justert for kjønn og baselineverdier viser deltakerne i gruppen med flere sett hadde i gjennomsnitt økt muskelmassen i beina med 123,5 gram mer(SD 55.17, 95% CI), enn deltakerne i gruppen som hadde intervensjon med kun ett sett. Ghennomsnittlig prosentvis endring i fra baselinetesting til fullført intervensjon er vist i Tabell 2`r tabell_lbmleg`. 
 
-Deltakerne i gruppen med flere sett var det i gjennomsnitt en 3,36%(SD 4,5) økning i muskelmasse i beina fra baseline til etter intervensjon. I gruppen med enkeltsett var det i gjennomsnitt en økning på 2.05%(SD 3,6) fra baseline til etter intervensjonen var avsluttet. 
+
+
+```{r}
+
+library(kableExtra)
+library(flextable)
+
+lbmleg <- dat %>%    
+  filter(!is.na(post)) %>%
+  group_by(sets) %>%
+  summarise(m = mean(pros.change),
+            sd = sd(pros.change)) %>%
+  mutate(meansd= paste0(signif(m, 3), "(", signif(sd, 3), ")")) %>%
+  select(sets, meansd)
+  
+  
+tabell_lbmleg <- lbmleg %>%
+mutate(sets = factor(sets, levels = c("multiple", "single"), 
+                        labels = c("Flersett", "Enkeltsett"))) %>%
+  select(sets, meansd) %>%
+  arrange(sets) %>%
+   flextable()  %>%
+  set_header_labels(sets = " ",
+                    meansd = "Tabell 2 - Økning fettfri masse i prosent")%>%
+    add_footer_row(values = "Gjennomsnittlig prosentvis endring(SD), fra pre til post", colwidths = 2) %>%
+    
+    autofit()
+tabell_lbmleg
+
+# Deltakerne i gruppen med flere sett var det i gjennomsnitt en 3,36%(SD 4,5) økning i muskelmasse i beina fra baseline til etter intervensjon. I gruppen med enkeltsett var det i gjennomsnitt en økning på 2.05%(SD 3,6) fra baseline til etter intervensjonen var avsluttet.
+```
+
+```{r}
+plotdata <- dxadata %>%
+  select(participant:include, sex, lean.left_leg, lean.right_leg) %>%
+  pivot_longer(names_to = "leg", 
+               values_to = "lean.legs", 
+               cols = lean.left_leg:lean.right_leg) %>%
+  mutate(leg = if_else(leg == "lean.left_leg", "L", "R"), 
+         sets = if_else(multiple == leg, "multiple", "single")) %>%
+  select(participant, time, sets, sex, leg, lean.legs) %>%
+  group_by(participant) %>%
+  mutate(n = n(), group = factor(sets, levels = c("single", "multiple")), time = factor(time, levels = c("pre", "post")))
+
+plotdata %>%
+ ggplot(aes(time, lean.legs, group = paste(participant, group), color = group)) + geom_() + theme_minimal()
+```
 
 #### Styrke 
 Etter å ha justert for verdier ved baseline og kjønn viser viste gruppen som har gjennomført enkeltsett hadde en gjennomsnittlig signifikant lavere fremgang enn gruppen med flersett i beinstyrke. Fremgangen er målt i skalert motstand, som er motstand som en andel av maks. I skalert motstand hadde gruppen med enkeltsett gjennomsnittlig 0.029(95% CI) lavere fremgang enn gruppen med flersett.
@@ -136,4 +174,5 @@ Målt i ren prosentvis gjennomsnittlig fremgang hadde gruppen med flersett 31% (
 
 ##Konklusjon
 Fra baseline til etter intervensjonen var avsluttet var det en signifikant forskjell i fremgangen i gruppen med flersett sammenlignet med gruppen med enkeltsett, i både mengde muskelmasse i beina, samt muskelstyrke i bein.
+
 
