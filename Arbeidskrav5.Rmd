@@ -2,7 +2,9 @@
 title: "Arbeidskrav5"
 author: "Jacob Mollatt"
 date: "11/21/2021"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -20,6 +22,7 @@ data("strengthvolume")
 
 ```{r}
 library(tidyverse)
+#UTREGNING AV PROSENTVIS ENDRING MELLOM GRUPPENE I FETTFRI MASSE
 
 dat <- dxadata %>%
   select(participant:include, sex, lean.left_leg, lean.right_leg) %>%
@@ -68,6 +71,8 @@ confint(m0)
 ```
 
 ```{r}
+# UTREGNING AV PROSENTVIS ENDRING MELLOM GRUPPENE I STYRKEØKNING
+
 strength <- strengthvolume %>%
   group_by(exercise) %>%
   mutate(scaled.load = load / max(load, na.rm = TRUE)) %>%
@@ -78,12 +83,17 @@ strength <- strengthvolume %>%
               values_from = combined.load) %>%
   mutate(pros.change= ((post - pre) / pre) * 100) %>%
   print()
-  
-strength %>%
+
+strength %>%    
   filter(!is.na(post)) %>%
   group_by(sets) %>%
   summarise(m = mean(pros.change),
-            sd = sd(pros.change))
+            sd = sd(pros.change)) %>%
+  mutate(meansd= paste0(signif(m, 3), "(", signif(sd, 3), ")")) %>%
+  select(sets, meansd) %>%
+  print()
+
+# REGRESJONSMODELL POSTVERDIER GITT PREVERDIER OG KJØNN, FORDELT PÅ INTERVENSJONSGRUPPE. FORSKJELL I GRUPPER SAMMENLIGNET MED FLERSETTGRUPPEM (ESTIMAT), SAMT KONFIDENSINTERVALL PÅ FORSKJELL.
  
 m3 <- lme4::lmer(post ~ pre + sex + sets+ (1|participant), data = strength)
 
@@ -114,15 +124,8 @@ Det ble gjennomført isokinetiske og isometriske styrketester av styrken i kneek
 #### Statistiske analyser
 For å sammenligne hvilken effekt styrketrening med kun ett enkeltsett kontra flere sett har på muskelstyrken i beina, og mengden muskelmasse(fettfri masse) har vi i denne studien sett på prosentvis endring fra baseline til etter intervensjon, i de to intervensjonsgruppene. Det har blitt regnet ut og presentert den gjennomsnittlige endringen fra baseline til etter intervensjon, med standarddavvik. De ulike intervensjonene er også sammenlignet med hjelp av en ANVOCA-modell, for å ta høyde for samvarierende variabler. Regresjonsligningen skal se på endringen etter at man tar høyde for forskjell i verdier ved pre-test og etter å ha tatt høyde for forskjell i kjønn. Det har også bitt foretatt en gjenomsnittssentrering av dataene. 
 
-## Resultater 
-
-#### Muskelmasse 
-Etter å ha justert for kjønn og baselineverdier viser deltakerne i gruppen med flere sett hadde i gjennomsnitt økt muskelmassen i beina med 123,5 gram mer(SD 55.17, 95% CI), enn deltakerne i gruppen som hadde intervensjon med kun ett sett. Ghennomsnittlig prosentvis endring i fra baselinetesting til fullført intervensjon er vist i Tabell 2`r tabell_lbmleg`. 
-
-
-
 ```{r}
-
+# TABELL FOR ØKNING FETTFRI MASSE PRE TIL POST FORDELT PÅ INTERVENSJONSGRUPPER 
 library(kableExtra)
 library(flextable)
 
@@ -142,7 +145,7 @@ mutate(sets = factor(sets, levels = c("multiple", "single"),
   arrange(sets) %>%
    flextable()  %>%
   set_header_labels(sets = " ",
-                    meansd = "Tabell 2 - Økning fettfri masse i prosent")%>%
+                    meansd = "Tabell 3 - Økning fettfri masse i prosent")%>%
     add_footer_row(values = "Gjennomsnittlig prosentvis endring(SD), fra pre til post", colwidths = 2) %>%
     
     autofit()
@@ -150,6 +153,42 @@ tabell_lbmleg
 
 # Deltakerne i gruppen med flere sett var det i gjennomsnitt en 3,36%(SD 4,5) økning i muskelmasse i beina fra baseline til etter intervensjon. I gruppen med enkeltsett var det i gjennomsnitt en økning på 2.05%(SD 3,6) fra baseline til etter intervensjonen var avsluttet.
 ```
+
+```{r}
+#TABELL ENDRING I MUSKELSTYRKE
+
+strength.change <- strength %>%    
+  filter(!is.na(post)) %>%
+  group_by(sets) %>%
+  summarise(m = mean(pros.change),
+            sd = sd(pros.change)) %>%
+  mutate(meansd= paste0(signif(m, 3), "(", signif(sd, 3), ")")) %>%
+  select(sets, meansd)
+  
+  
+tabell_strengthchange <- strength.change %>%
+mutate(sets = factor(sets, levels = c("multiple", "single"), 
+                        labels = c("Flersett", "Enkeltsett"))) %>%
+  select(sets, meansd) %>%
+  arrange(sets) %>%
+   flextable()  %>%
+  set_header_labels(sets = " ",
+                    meansd = "Tabell 2 - Økning beinstyrke i prosent")%>%
+    add_footer_row(values = "Gjennomsnittlig prosentvis endring(SD), fra pre til post", colwidths = 2) %>%
+    
+    autofit()
+tabell_strengthchange
+
+#Målt i ren prosentvis gjennomsnittlig fremgang hadde gruppen med flersett 31% (SD 14.2) fremgang fra baseline til etter intervensjon, mens gruppen med enkeltsett hadde 24.5% (SD 12.9) fremgang fra baseline til intervensjonen var avsluttet. 
+```
+
+
+## Resultater 
+
+#### Muskelmasse 
+Etter å ha justert for kjønn og baselineverdier viser deltakerne i gruppen med flere sett hadde i gjennomsnitt økt muskelmassen i beina med 123,5 gram mer(SD 55.17, 95% CI), enn deltakerne i gruppen som hadde intervensjon med kun ett sett. Gjennomsnittlig prosentvis endring i fra baselinetesting til fullført intervensjon er vist i Tabell 2`r tabell_lbmleg`. 
+
+
 
 ```{r}
 plotdata <- dxadata %>%
@@ -168,9 +207,9 @@ plotdata %>%
 ```
 
 #### Styrke 
-Etter å ha justert for verdier ved baseline og kjønn viser viste gruppen som har gjennomført enkeltsett hadde en gjennomsnittlig signifikant lavere fremgang enn gruppen med flersett i beinstyrke. Fremgangen er målt i skalert motstand, som er motstand som en andel av maks. I skalert motstand hadde gruppen med enkeltsett gjennomsnittlig 0.029(95% CI) lavere fremgang enn gruppen med flersett.
+Etter å ha justert for verdier ved baseline og kjønn målte gruppen som har gjennomført enkeltsett hadde en signifikant lavere verdi etter avsluttet intervensjon enn gruppen med flersett i beinstyrke. Fremgangen er målt i skalert motstand, som er motstand som en andel av maks. I skalert motstand hadde gruppen med enkeltsett gjennomsnittlig 0.029(95% CI) lavere verdier etter endt intervensjon enn gruppen med flersett.
 
-Målt i ren prosentvis gjennomsnittlig fremgang hadde gruppen med flersett 31% (SD 14.2) fremgang fra baseline til etter intervensjon, mens gruppen med enkeltsett hadde 24.5% (SD 12.9) fremgang fra baseline til intervensjonen var avsluttet. 
+Gjennomsnittlig prosentvis endring i muskelstyrke fra baselinetesting til fullført intervensjon er vist i Tabell 3`r tabell_strengthchange`.
 
 ##Konklusjon
 Fra baseline til etter intervensjonen var avsluttet var det en signifikant forskjell i fremgangen i gruppen med flersett sammenlignet med gruppen med enkeltsett, i både mengde muskelmasse i beina, samt muskelstyrke i bein.
