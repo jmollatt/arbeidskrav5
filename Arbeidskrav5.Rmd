@@ -164,7 +164,7 @@ plotdata <- dxadata %>%
   mutate(n = n(), group = factor(sets, levels = c("single", "multiple")), time = factor(time, levels = c("pre", "post")))
 
 plotdata %>%
- ggplot(aes(time, lean.legs, group = paste(participant, group), color = group)) + geom_() + theme_minimal()
+ ggplot(aes(time, lean.legs, group = paste(participant, group), color = group)) + geom_line() + theme_minimal()
 ```
 
 #### Styrke 
