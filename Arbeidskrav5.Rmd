@@ -176,7 +176,7 @@ mutate(sets = factor(sets, levels = c("multiple", "single"),
   arrange(sets) %>%
    flextable()  %>%
   set_header_labels(sets = " ",
-                    meansd = "Tabell 2 - Økning beinstyrke i prosent")%>%
+                    meansd = "Tabell 3 - Økning beinstyrke i prosent")%>%
     add_footer_row(values = "Gjennomsnittlig prosentvis endring(SD), fra pre til post", colwidths = 2) %>%
     
     autofit()
@@ -213,8 +213,10 @@ Etter å ha justert for verdier ved baseline og kjønn målte gruppen som har gj
 
 Gjennomsnittlig prosentvis endring i muskelstyrke fra baselinetesting til fullført intervensjon er vist i Tabell 3`r tabell_strengthchange`.
 
-## Konklusjon 
+## Konklusjon
+
 Fra baseline til etter intervensjonen var avsluttet var det en signifikant forskjell i fremgangen i gruppen med flersett sammenlignet med gruppen med enkeltsett, i både mengde muskelmasse i beina, samt muskelstyrke i bein.
 
-#### Kommentar 
-Leverer heller et uferdig dokument til fristen, fullstendig klar over store mangler med referering og fullverdighet i introduksjon og diskusjon. Håper på tilbakemeldinger på tolkning av resultater og valg av statistiske tester. 
+#### Kommentar
+
+Leverer heller et uferdig dokument til fristen, fullstendig klar over store mangler med referering og fullverdighet i introduksjon og diskusjon. Håper på tilbakemeldinger på tolkning av resultater og valg av statistiske tester.
