@@ -148,7 +148,7 @@ mutate(sets = factor(sets, levels = c("multiple", "single"),
   arrange(sets) %>%
    flextable()  %>%
   set_header_labels(sets = " ",
-                    meansd = "Tabell 3 - Økning fettfri masse i prosent")%>%
+                    meansd = "Tabell 2 - Økning fettfri masse i prosent")%>%
     add_footer_row(values = "Gjennomsnittlig prosentvis endring(SD), fra pre til post", colwidths = 2) %>%
     
     autofit()
@@ -204,7 +204,7 @@ plotdata <- dxadata %>%
   mutate(n = n(), group = factor(sets, levels = c("single", "multiple")), time = factor(time, levels = c("pre", "post")))
 
 plotdata %>%
- ggplot(aes(time, lean.legs, group = paste(participant, group), color = group)) + geom_line() + theme_minimal()
+ ggplot(aes(time, lean.legs, group = participant)) + geom_line() + theme_minimal()
 ```
 
 #### Styrke
@@ -220,3 +220,31 @@ Fra baseline til etter intervensjonen var avsluttet var det en signifikant forsk
 #### Kommentar
 
 Leverer heller et uferdig dokument til fristen, fullstendig klar over store mangler med referering og fullverdighet i introduksjon og diskusjon. Håper på tilbakemeldinger på tolkning av resultater og valg av statistiske tester.
+
+
+```{r}
+
+library(tidyverse); library(exscidata); data("strengthvolume")
+strengthvolume %>%
+  filter(exercise == "legext", time %in% c("pre", "post")) %>%
+  group_by(sets, time) %>%
+  summarise(m = mean(load, na.rm = TRUE), 
+            s = sd(load, na.rm = TRUE)) %>%
+  mutate(time = factor(time, levels = c("pre", "post"), labels = c("Pre-training", "Post-training")), 
+         sets = factor(sets, levels = c("single", "multiple"), labels = c("Single-set", "Multiple-set"))) %>%
+  ggplot(aes(time, m, color = sets)) + 
+  
+  geom_errorbar(aes(ymin = m - s, ymax = m + s), 
+                position = position_dodge(width = 0.2), 
+                width = 0.2) +
+  geom_point(position = position_dodge(width = 0.2)) +
+  
+  labs(x = "Time-point", 
+       y = "Average load (kg)", 
+       color = "Sets") +
+  
+  theme_bw() + 
+  
+  theme(legend.position = c(0.1, 0.9))
+```
+
