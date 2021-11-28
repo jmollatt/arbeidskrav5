@@ -243,7 +243,7 @@ strengthvolume %>%
        y = "Average load (kg)", 
        color = "Sets") +
   
-  theme_bw() + 
+  theme_bw() +
   
   theme(legend.position = c(0.1, 0.9))
 ```
